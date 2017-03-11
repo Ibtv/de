@@ -1,0 +1,665 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Language" content="de-DE">
+    <title>{$site_name}</title>
+    <tc_include file="Public:header" />
+    <link rel="stylesheet" type="text/css" href="__TMPL__Public/css/index.css"/>
+	<script type="text/javascript" src="__TMPL__Public/js/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="__TMPL__Public/js/jquery.touchSlider.js"></script>
+</head>
+
+<body>
+
+<tc_include file="Public:main"/>
+<div id="wrap">
+    	<!-- content -->
+        <div class="content" style="margin-bottom:20px;">
+        	<!-- banner -->
+            <div class="banner">
+            	<ul class="banner_img">
+                <php>
+                    $Hits_min=sp_sql_posts("field:post_title,tid,smeta;order:post_hits asc;limit:4;"); 
+                    $min = 0;
+              	</php>
+                <foreach name="Hits_min" item="Min">
+                <php>
+                $min++;
+                $smeta=json_decode($Min['smeta'],true);
+                </php>                
+                	<li <php>if($min == 1){echo 'style="display:block; z-index:10;"';}</php>>
+                     <a title="{$Min.post_title}" href="{:u('article/index',array('id'=>$Min['tid']))}">
+                        <img  onerror="nofind();" src="{:sp_get_asset_upload_path($smeta['thumb'])}" alt="{$Min.post_title}" title="{$Min.post_title}" />
+                    </a>
+                    </li>
+                </foreach>
+                
+                
+
+                </ul>
+                <div class="prev" id="btn_next_a" href="javascript:;"> < </div>
+                <div class="next" id="btn_prev_a" href="javascript:;"> > </div>
+                <script type="text/javascript">
+                	$(".banner").touchSlider({
+						flexible : true,
+						speed : 200,
+						btn_prev : $("#btn_prev_a"),
+						btn_next : $("#btn_next_a"),
+					});
+									
+					$(".banner").click(function(){
+						if($dragBln) {
+							return false;
+						}
+					});
+									
+					timer = setInterval(function(){
+						$(".next").click();
+					}, 2000);
+									
+					$(".content").hover(function(){
+						clearInterval(timer);
+					},function(){
+						timer = setInterval(function(){
+							$(".next").click();
+						},2000);
+					});
+									
+					$(".banner").bind("touchstart",function(){
+						clearInterval(timer);
+					}).bind("touchend", function(){
+						timer = setInterval(function(){
+							$(".next").click();
+						}, 2000);
+					});
+                </script>
+            </div>
+            <!-- //banner -->
+            <!-- coucent -->
+            <div class="coucent" style="margin-right:15px;">
+                <!-- center -->
+                    <php>
+                    	$Hits_min=sp_sql_posts("field:post_title,tid;order:post_hits asc;limit:4;"); 
+                        $h = 0;
+                  	</php>
+                    <foreach name="Hits_min" item="Min">
+                    <php>
+                    $h++;
+                    </php>
+                        <div class="coucent_center" <php>if($h == 4){echo ' style="margin-bottom:0;"';}</php>>
+                            <a title="{$Min.post_title}" href="{:u('article/index',array('id'=>$Min['tid']))}">
+                              {$Min.post_title}
+                            </a>
+                        </div>
+                    </foreach>
+
+                <!-- //center -->
+            </div>
+            <!-- //coucent -->
+            <!-- abtopbi -->
+            <div class="abtopbi">
+            	<div class="abtopbi_tit" style="background:#000;"><h3>auf dem neuesten Stand</h3></div>
+                <!-- center -->
+                <ul class="abtopbi_center">
+                    <php>
+                    	$New_date=sp_sql_posts("field:post_title,tid;order:post_date desc;limit:8;");
+                  	</php>
+                    <foreach name="New_date" item="Date">
+                        <li><a title="{$Date.post_title}" href="{:u('article/index',array('id'=>$Date['tid']))}">
+                                  {$Date.post_title}
+                        </a></li>
+                    </foreach>
+                </ul>
+                <!-- //center -->
+            </div>
+            <!-- //abtopbi -->
+        </div>
+        <!-- //content -->
+        <!-- news -->
+        <div class="content">
+            	<div class="title"><a href="{:u('list/index',array('id'=>110))}">News ></a></div>
+                <div class="main">
+                	<div class="main_left">
+                    	<ul class="main_list">
+                 <php>
+                    $News_hits=sp_sql_posts("cid:111,112,113,114,115,116,117,118;field:post_title,tid,smeta;order:post_hits asc;limit:5;"); 
+                    $n = 0;
+              	</php>
+                <foreach name="News_hits" item="Hits">
+                <php>
+                $n++;
+                $smeta=json_decode($Hits['smeta'],true);
+                </php>
+                        	<li <php>if($n == 5){echo 'style="margin-right:0;"';}</php>>
+                                    <a title="{$Hits.post_title}" href="{:u('article/index',array('id'=>$Hits['tid']))}">
+                                	<div class="main_img">
+                        			<img  onerror="nofind();" src="{:sp_get_asset_upload_path($smeta['thumb'])}" alt="{$Hits.post_title}" title="{$Hits.post_title}" />
+                                    </div>
+                                </a>
+                                <div class="main_title">
+                                    <a title="{$Hits.post_title}" href="{:u('article/index',array('id'=>$Hits['tid']))}">{$Hits.post_title}</a>
+                                </div>
+                            </li>
+                </foreach>
+                
+
+                        	
+                        </ul>
+                        <ul class="main_list_three">
+                 <php>
+                    $News_hits=sp_sql_posts("cid:111,112,113,114,115,116,117,118;field:post_title,tid,smeta;order:post_date desc;limit:4;"); 
+                    $n = 0;
+              	</php>
+                <foreach name="News_hits" item="Hits">
+                <php>
+                $n++;
+                $smeta=json_decode($Hits['smeta'],true);
+                </php>
+                        	<li <php>if($n == 4){echo 'style="margin-right:0;"';}</php>>
+                                    <a title="{$Hits.post_title}" href="{:u('article/index',array('id'=>$Hits['tid']))}">
+                                	<div class="main_img_a">
+                        			<img  onerror="nofind();" src="{:sp_get_asset_upload_path($smeta['thumb'])}" alt="{$Hits.post_title}" title="{$Hits.post_title}" />
+                                    </div>
+                                </a>
+                                <div class="main_txt">
+                                    <a title="{$Hits.post_title}" href="{:u('article/index',array('id'=>$Hits['tid']))}">{$Hits.post_title}</a>
+                                </div>
+                            </li>
+                </foreach>
+                        </ul>
+                    </div>
+                    
+                </div>
+
+            </div>
+        <!-- //news -->
+        <!-- gewerbe -->
+        <div class="content">
+            <div class="title"><a href="{:u('list/index',array('id'=>120))}">Gewerbe ></a></div>
+            <div class="main">
+                <div class="content_1">
+                <php>
+                    $Gewerbe_date=sp_sql_posts("cid:121,122,123,124;field:post_title,post_excerpt,tid,smeta;order:post_date desc;limit:5;"); 
+                    $g = 0;
+              	</php>
+                <foreach name="Gewerbe_date" item="Date">
+                <php>
+                $g++;
+                $smeta=json_decode($Date['smeta'],true);
+                </php>
+                    <div class="sidebar_c" <php>if($g == 1){echo 'style="display:block;"';}else{ echo 'id="content_1"';}</php>>
+                        <div class="image_c">
+                            <a title="{$Date.post_title}" href="{:u('article/index',array('id'=>$Date['tid']))}">
+                                <img  onerror="nofind();" src="{:sp_get_asset_upload_path($smeta['thumb'])}" alt="{$Date.post_title}" title="{$Date.post_title}" />
+                            </a>
+                        </div>
+                            <a title="{$Date.post_title}" href="{:u('article/index',array('id'=>$Date['tid']))}">
+                        <h2>{$Date.post_title}</h2>
+                        <p>S{$Date.post_excerpt}</p>
+                        </a>
+                    </div>
+                </foreach>
+
+                    <div class="icon">
+                        <script type="text/javascript">
+                            var index=0;
+                            var playCount=null;
+                        
+                            $(".center_icon li").hover(function(){
+                                clearInterval(playCount);
+                                $(this).addClass("bg_a").siblings().removeClass("bg_a");
+                                index = $(this).index();
+                                $(".sidebar_c").eq(index).show().siblings(".sidebar_c").hide();
+                                
+                            }).mouseout(function(){
+                                auto_play();
+                            });
+                            function auto_play(){
+                                playCount=setInterval(function(){
+                                    index++;
+                                    if(index > 5){index=0;}
+                                    $(".center_icon li").eq(index).addClass("bg_a").siblings().removeClass("bg_a");	
+                                    $(".sidebar_c").eq(index).show().siblings(".sidebar_c").hide();
+                                },3000);
+                                
+                            };
+                            
+                            auto_play();//调用方法
+                        </script>
+                    </div>
+                </div>
+                <div class="sidebar_d">
+                <php>
+                    $Gewerbe_hits=sp_sql_posts("cid:121,122,123,124;field:post_title,post_excerpt,tid,smeta;order:post_hits asc;limit:4;"); 
+              	</php>
+                <foreach name="Gewerbe_hits" item="Hits">
+                <php>
+                $smeta=json_decode($Hits['smeta'],true);
+                </php>
+                   <dl class="list_2">
+                    <dt><a title="{$Hits.post_title}" href="{:u('article/index',array('id'=>$Hits['tid']))}">
+                                <img  onerror="nofind();" src="{:sp_get_asset_upload_path($smeta['thumb'])}" alt="{$Hits.post_title}" title="{$Hits.post_title}" width="230" height="152"/>
+                    </a></dt>
+                        <dd><a title="{$Hits.post_title}" href="{:u('article/index',array('id'=>$Hits['tid']))}"><span>{$Hits.post_title}</span></a></dd>
+                    </dl>
+                </foreach>
+                
+
+                </div>
+                
+            </div>
+        </div>
+        <!-- //gewerbe -->
+        <!-- geldanlage -->
+        <div class="content">
+            	<div class="title"><a href="{:u('list/index',array('id'=>130))}">Geldanlage ></a></div>
+                <div class="main">
+                <div class="sidebar_g">
+                <div class="abtopbi">
+                <!-- center -->
+                <ul class="abtopbi_center">
+                    <php>
+                    	$Geldanlage_date=sp_sql_posts("cid:131,132,133,134,135;field:post_title,tid;order:post_date desc;limit:12;");
+                  	</php>
+                    <foreach name="Geldanlage_date" item="Date">
+                        <li><a title="{$Date.post_title}" href="{:u('article/index',array('id'=>$Date['tid']))}">
+                                  {$Date.post_title}
+                        </a></li>
+                    </foreach>
+                </ul>
+                <!-- //center -->
+            	</div>
+                </div>
+                	<div class="sidebar_f">
+                <php>
+                    $Geldanlage_hits=sp_sql_posts("cid:131,132,133,134,135;field:post_title,post_excerpt,tid,smeta;order:post_hits asc;limit:4;"); 
+              	</php>
+                <foreach name="Geldanlage_hits" item="Hits">
+                <php>
+                $smeta=json_decode($Hits['smeta'],true);
+                </php>
+                    	<div class="menu_a">
+                        	<div class="image_e">
+                                <a title="{$Hits.post_title}" href="{:u('article/index',array('id'=>$Hits['tid']))}">
+                                    <img  onerror="nofind();" src="{:sp_get_asset_upload_path($smeta['thumb'])}" alt="{$Hits.post_title}" title="{$Hits.post_title}" />
+                                </a>
+                            </div>
+                            <div class="txt_a">
+                            <a title="{$Hits.post_title}" href="{:u('article/index',array('id'=>$Hits['tid']))}">
+                                <h3>{$Hits.post_title}</h3>
+                                <p>{$Hits.post_excerpt}</p>
+                            </a>
+                            </div>
+                        </div>
+                </foreach>
+                    </div>
+                    <div class="sidebar_g">
+                <php>
+                    $Geldanlage_hits=sp_sql_posts("cid:131,132,133,134,135;field:post_title,post_excerpt,tid,smeta;order:post_hits asc;limit:4,2;"); 
+              	</php>
+                <foreach name="Geldanlage_hits" item="Hits">
+                <php>
+                $smeta=json_decode($Hits['smeta'],true);
+                </php>
+                    	<dl class="list_4">
+                        	<dt>
+                             <a title="{$Hits.post_title}" href="{:u('article/index',array('id'=>$Hits['tid']))}">
+                                    <img  onerror="nofind();" src="{:sp_get_asset_upload_path($smeta['thumb'])}" alt="{$Hits.post_title}" title="{$Hits.post_title}" />
+                            </a>
+                            </dt>
+                            <dd><a title="{$Hits.post_title}" href="{:u('article/index',array('id'=>$Hits['tid']))}">{$Hits.post_title}<span>{$Hits.post_excerpt}</span></a></dd>
+                        </dl>
+                </foreach>
+                    </div>
+                </div>
+            </div>
+        <!-- geldanlage -->
+        <!-- wissen -->
+        <div class="content">
+            <div class="title"><a href="{:u('list/index',array('id'=>140))}"> Wissen ></a></div>
+            <div class="main">
+                <div class="sidebar_h">
+               <php>
+                    $Wissen_hits=sp_sql_posts("cid:141,142,143,144,145;field:post_title,tid,smeta;order:post_hits asc;limit:4;"); 
+                    $w = 0;
+              	</php>
+                <foreach name="Wissen_hits" item="Hits">
+                <php>
+                $w++;
+                $smeta=json_decode($Hits['smeta'],true);
+                </php>
+                    <div class="image_f" <php>if($w == 1){echo 'style="display:block;"';}</php>>
+                            <a title="{$Hits.post_title}" href="{:u('article/index',array('id'=>$Hits['tid']))}">
+                                <img  onerror="nofind();" src="{:sp_get_asset_upload_path($smeta['thumb'])}" alt="{$Hits.post_title}" title="{$Hits.post_title}" />
+                            </a>
+                        <div class="ceng">
+                            <a title="{$Hits.post_title}" href="{:u('article/index',array('id'=>$Hits['tid']))}">
+                        <p>{$Hits.post_title}</p>
+                        </a>
+                        </div>
+                    </div>
+                </foreach>
+               <php>
+                    $Wissen_hits=sp_sql_posts("cid:141,142,143,144,145;field:post_title,tid;order:post_hits asc;limit:4;"); 
+              	</php>
+                    <ul class="list_5">
+                <foreach name="Wissen_hits" item="Hits">
+                        <li class="li_1"><a title="{$Hits.post_title}" href="{:u('article/index',array('id'=>$Hits['tid']))}">{$Hits.post_title}</a></li>
+                </foreach>
+                    </ul>
+                    <script type="text/javascript">
+                        $(".sidebar_h .list_5 li.li_1").mousemove(function(){
+                            var index = $(this).index();
+                            $(".image_f").eq(index).show().siblings(".image_f").hide();
+                            $(this).addClass("bg").siblings().removeClass("bg");
+                            
+                        });
+                    </script>
+                </div>
+                <php>
+                    $Wissen_date=sp_sql_posts("cid:141,142,143,144,145;field:post_title,tid,smeta;order:post_date desc;limit:2;"); 
+              	</php>
+                <foreach name="Wissen_date" item="Date">
+                <php>
+                $smeta=json_decode($Date['smeta'],true);
+                </php>                
+                <div class="sidebar_i">
+                    <div class="image_g">
+							<a title="{$Date.post_title}" href="{:u('article/index',array('id'=>$Date['tid']))}">
+                                <img  onerror="nofind();" src="{:sp_get_asset_upload_path($smeta['thumb'])}" alt="{$Date.post_title}" title="{$Date.post_title}" />
+                            </a>
+                    </div>
+							<a title="{$Date.post_title}" href="{:u('article/index',array('id'=>$Date['tid']))}">
+                    			<p>{$Date.post_title}</p>
+                            </a>
+                </div>
+                </foreach>
+
+            </div>
+        </div>
+        <!-- //wissen -->
+        <!-- kultur -->
+        <div class="content">
+            	<div class="title"><a href="{:u('list/index',array('id'=>150))}">Kultur ></a></div>
+                <div class="main">
+
+                <php>
+                    $Kultur_date=sp_sql_posts("cid:151,152,153,154,155;field:post_title,tid,smeta;order:post_date desc;limit:6;"); 
+                    $k=0;
+              	</php>
+                <foreach name="Kultur_date" item="Date">
+                <php>
+                $smeta=json_decode($Date['smeta'],true);
+                $k++;
+                </php>                
+                	<dl class="list_1" <php>if($k == 3 || $k == 6){echo 'style="margin-right:0;"';}</php>>
+                    	<dt>
+							<a title="{$Date.post_title}" href="{:u('article/index',array('id'=>$Date['tid']))}">
+                                <img  onerror="nofind();" src="{:sp_get_asset_upload_path($smeta['thumb'])}" alt="{$Date.post_title}" title="{$Date.post_title}" />
+                            </a>
+                        </dt>
+                        <dd><a title="{$Date.post_title}" href="{:u('article/index',array('id'=>$Date['tid']))}">{$Date.post_title}</a></dd>
+                    </dl>
+                </foreach>
+                </div>
+            </div>
+        <!-- //kultur -->
+        <!-- reise -->
+        <div class="content">
+            <div class="title"><a href="{:u('list/index',array('id'=>160))}">Reise ></a></div>
+            <div class="main">
+                <div class="content_1">
+                <php>
+                    $Reise_date=sp_sql_posts("cid:161,162,163,164,165;field:post_title,post_excerpt,tid,smeta;order:post_date desc;limit:5;"); 
+                    $r = 0;
+              	</php>
+                <foreach name="Reise_date" item="Date">
+                <php>
+                $r++;
+                $smeta=json_decode($Date['smeta'],true);
+                </php>
+                    <div class="sidebar_c" <php>if($r == 1){echo 'style="display:block;"';}else{ echo 'id="content_1"';}</php>>
+                        <div class="image_c">
+                            <a title="{$Date.post_title}" href="{:u('article/index',array('id'=>$Date['tid']))}">
+                                <img  onerror="nofind();" src="{:sp_get_asset_upload_path($smeta['thumb'])}" alt="{$Date.post_title}" title="{$Date.post_title}" />
+                            </a>
+                        </div>
+                            <a title="{$Date.post_title}" href="{:u('article/index',array('id'=>$Date['tid']))}">
+                        <h2>{$Date.post_title}</h2>
+                        <p>S{$Date.post_excerpt}</p>
+                        </a>
+                    </div>
+                </foreach>
+                
+                    <div class="icon">
+                        <script type="text/javascript">
+                            var index=0;
+                            var playCount=null;
+                        
+                            $(".center_icon li").hover(function(){
+                                clearInterval(playCount);
+                                $(this).addClass("bg_a").siblings().removeClass("bg_a");
+                                index = $(this).index();
+                                $(".sidebar_c").eq(index).show().siblings(".sidebar_c").hide();
+                                
+                            }).mouseout(function(){
+                                auto_play();
+                            });
+                            function auto_play(){
+                                playCount=setInterval(function(){
+                                    index++;
+                                    if(index > 5){index=0;}
+                                    $(".center_icon li").eq(index).addClass("bg_a").siblings().removeClass("bg_a");	
+                                    $(".sidebar_c").eq(index).show().siblings(".sidebar_c").hide();
+                                },3000);
+                                
+                            };
+                            
+                            auto_play();//调用方法
+                        </script>
+                    </div>
+                </div>
+                <div class="sidebar_d">
+                <php>
+                    $Reise_hits=sp_sql_posts("cid:161,162,163,164,165;field:post_title,post_excerpt,tid,smeta;order:post_hits asc;limit:4;"); 
+              	</php>
+                <foreach name="Reise_hits" item="Hits">
+                <php>
+                $smeta=json_decode($Hits['smeta'],true);
+                </php>
+                   <dl class="list_2">
+                    <dt><a title="{$Hits.post_title}" href="{:u('article/index',array('id'=>$Hits['tid']))}">
+                                <img  onerror="nofind();" src="{:sp_get_asset_upload_path($smeta['thumb'])}" alt="{$Hits.post_title}" title="{$Hits.post_title}" width="230" height="152"/>
+                    </a></dt>
+                        <dd><a title="{$Hits.post_title}" href="{:u('article/index',array('id'=>$Hits['tid']))}"><span>{$Hits.post_title}</span></a></dd>
+                    </dl>
+                </foreach>
+                
+
+                </div>
+
+            </div>
+        </div>
+        <!-- //reise -->
+        <!-- interview -->
+        <div class="content">
+            	<div class="title"><a href="{:u('list/index',array('id'=>170))}">Interview ></a></div>
+                <div class="main">
+                	<div class="main_left">
+                    	
+                        <ul class="main_list_three">
+                 <php>
+                    $Interview_hits=sp_sql_posts("cid:171,172,173,174,175,176;field:post_title,tid,smeta;order:post_date desc;limit:4;"); 
+                    $i = 0;
+              	</php>
+                <foreach name="Interview_hits" item="Hits">
+                <php>
+                $i++;
+                $smeta=json_decode($Hits['smeta'],true);
+                </php>
+                        	<li <php>if($i == 4){echo 'style="margin-right:0;"';}</php>>
+                                    <a title="{$Hits.post_title}" href="{:u('article/index',array('id'=>$Hits['tid']))}">
+                                	<div class="main_img_a">
+                        			<img  onerror="nofind();" src="{:sp_get_asset_upload_path($smeta['thumb'])}" alt="{$Hits.post_title}" title="{$Hits.post_title}" />
+                                    </div>
+                                </a>
+                                <div class="main_txt">
+                                    <a title="{$Hits.post_title}" href="{:u('article/index',array('id'=>$Hits['tid']))}">{$Hits.post_title}</a>
+                                </div>
+                            </li>
+                </foreach>
+                        </ul>
+                        <ul class="main_list">
+                 <php>
+                    $Interview_hits=sp_sql_posts("cid:171,172,173,174,175,176;field:post_title,tid,smeta;order:post_hits asc;limit:5;"); 
+                    $i = 0;
+              	</php>
+                <foreach name="Interview_hits" item="Hits">
+                <php>
+                $i++;
+                $smeta=json_decode($Hits['smeta'],true);
+                </php>
+                        	<li <php>if($i == 5){echo 'style="margin-right:0;"';}</php>>
+                                    <a title="{$Hits.post_title}" href="{:u('article/index',array('id'=>$Hits['tid']))}">
+                                	<div class="main_img">
+                        			<img  onerror="nofind();" src="{:sp_get_asset_upload_path($smeta['thumb'])}" alt="{$Hits.post_title}" title="{$Hits.post_title}" />
+                                    </div>
+                                </a>
+                                <div class="main_title">
+                                    <a title="{$Hits.post_title}" href="{:u('article/index',array('id'=>$Hits['tid']))}">{$Hits.post_title}</a>
+                                </div>
+                            </li>
+                </foreach>
+                
+
+                        	
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        <!-- //interview -->
+        <!-- business guide -->
+        <div class="content">
+            <div class="title"><a href="{:u('list/index',array('id'=>180))}">Business Guide  ></a></div>
+            <div class="main" style=" margin-bottom:20px;">
+                <div class="sidebar_h">
+               <php>
+                    $Business_hits=sp_sql_posts("cid:181,182,183,184,185;field:post_title,tid,smeta;order:post_hits asc;limit:4;"); 
+                    $w = 0;
+              	</php>
+                <foreach name="Business_hits" item="Hits">
+                <php>
+                $smeta=json_decode($Hits['smeta'],true);
+                $w++;
+                </php>
+                    <div class="image_h" <php>if($w == 1){echo 'style="display:block;"';}</php>>
+                            <a title="{$Hits.post_title}" href="{:u('article/index',array('id'=>$Hits['tid']))}">
+                                <img  onerror="nofind();" src="{:sp_get_asset_upload_path($smeta['thumb'])}" alt="{$Hits.post_title}" title="{$Hits.post_title}" />
+                            </a>
+                        <div class="ceng">
+                            <a title="{$Hits.post_title}" href="{:u('article/index',array('id'=>$Hits['tid']))}">
+                        <p>{$Hits.post_title}</p>
+                        </a>
+                        </div>
+                    </div>
+                </foreach>
+               <php>
+                    $Business_hits=sp_sql_posts("cid:181,182,183,184,185;field:post_title,tid;order:post_hits asc;limit:4;"); 
+              	</php>
+                    <ul class="list_5">
+                <foreach name="Business_hits" item="Hits">
+                        <li class="li_2"><a title="{$Hits.post_title}" href="{:u('article/index',array('id'=>$Hits['tid']))}">{$Hits.post_title}</a></li>
+                </foreach>
+                    </ul>
+                    <script type="text/javascript">
+                        $(".sidebar_h .list_5 li.li_2").mousemove(function(){
+                            var index = $(this).index();
+                            $(".image_h").eq(index).show().siblings(".image_h").hide();
+                            $(this).addClass("bg").siblings().removeClass("bg");
+                            
+                        });
+                    </script>
+                </div>
+                <php>
+                    $Wissen_date=sp_sql_posts("cid:181,182,183,184,185;field:post_title,tid,smeta;order:post_date desc;limit:2;"); 
+              	</php>
+                <foreach name="Wissen_date" item="Date">
+                <php>
+                $smeta=json_decode($Date['smeta'],true);
+                </php>                
+                <div class="sidebar_i">
+                    <div class="image_g">
+							<a title="{$Date.post_title}" href="{:u('article/index',array('id'=>$Date['tid']))}">
+                                <img  onerror="nofind();" src="{:sp_get_asset_upload_path($smeta['thumb'])}" alt="{$Date.post_title}" title="{$Date.post_title}" />
+                            </a>
+                    </div>
+							<a title="{$Date.post_title}" href="{:u('article/index',array('id'=>$Date['tid']))}">
+                    			<p>{$Date.post_title}</p>
+                            </a>
+                </div>
+                </foreach>
+            </div>
+        </div>
+        <!-- //business guide -->
+        <!-- chance -->
+        <div class="content" style="margin-bottom:50px;">
+            	<div class="title"><a href="{:u('list/index',array('id'=>190))}">Chance  ></a></div>
+                <div class="main">
+                	<div class="sidebar_f">
+                <php>
+                    $Chance_date=sp_sql_posts("cid:191,192,193,194;field:post_title,post_excerpt,tid,smeta;order:post_date desc;limit:4;"); 
+              	</php>
+                <foreach name="Chance_date" item="Date">
+                <php>
+                $smeta=json_decode($Date['smeta'],true);
+                </php>
+                    	<div class="menu_a">
+                        	<div class="image_e">
+                                <a title="{$Date.post_title}" href="{:u('article/index',array('id'=>$Date['tid']))}">
+                                    <img  onerror="nofind();" src="{:sp_get_asset_upload_path($smeta['thumb'])}" alt="{$Date.post_title}" title="{$Date.post_title}" />
+                                </a>
+                            </div>
+                            <div class="txt_a">
+                                <a title="{$Date.post_title}" href="{:u('article/index',array('id'=>$Date['tid']))}">
+                                <h3>{$Date.post_title}</h3>
+                                <p>{$Date.post_excerpt}</p>
+                                </a>
+                            </div>
+                        </div>
+                </foreach>
+                    </div>
+                    <div class="sidebar_f">
+                <php>
+                    $Chance_hits=sp_sql_posts("cid:191,192,193,194;field:post_title,post_excerpt,tid,smeta;order:post_hits asc;limit:4;"); 
+              	</php>
+                <foreach name="Chance_hits" item="Hits">
+                <php>
+                $smeta=json_decode($Hits['smeta'],true);
+                </php>
+                    	<div class="menu_a">
+                        	<div class="image_e">
+                                <a title="{$Hits.post_title}" href="{:u('article/index',array('id'=>$Hits['tid']))}">
+                                    <img  onerror="nofind();" src="{:sp_get_asset_upload_path($smeta['thumb'])}" alt="{$Hits.post_title}" title="{$Hits.post_title}" />
+                                </a>
+                            </div>
+                            <div class="txt_a">
+                                <a title="{$Hits.post_title}" href="{:u('article/index',array('id'=>$Hits['tid']))}">
+                                <h3>{$Hits.post_title}</h3>
+                                <p>{$Hits.post_excerpt}</p>
+                                </a>
+                            </div>
+                        </div>
+                </foreach>
+                    </div>
+                </div>
+            </div>
+        <!-- //chance -->
+    </div>
+
+<tc_include file="Public:links"/>
+<tc_include file="Public:footer"/>
+<tc_include file="Public:scripts"/>
+</body>
+</html>
